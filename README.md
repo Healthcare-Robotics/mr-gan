@@ -5,9 +5,9 @@ Z. Erickson, S. Chernova, and C. C. Kemp, "Semi-Supervised Haptic Material Recog
 Project webpage: http://healthcare-robotics.com/mr-gan
 
 ## Download the MREO dataset
-Compact dataset (1 GB) for computing tables 1, 2, and 4: `wget -O data_processed_compact.tar.gz https://goo.gl/WiqSjJ`  
-Full dataset (20 GB) for computing table 3: `wget -O data_processed_full.tar.gz https://goo.gl/FnXfgM`  
-Raw data collected on the PR2: `wget -O data_raw.tar.gz https://goo.gl/DNqPib`  
+Compact dataset (1 GB) for computing tables 1, 2, and 4: https://goo.gl/WiqSjJ  
+Full dataset (20 GB) for computing table 3: https://goo.gl/FnXfgM  
+Raw data collected on the PR2: https://goo.gl/DNqPib  
 Dataset details can be found on the [project webpage](http://healthcare-robotics.com/mr-gan).
 
 ## Running the code
