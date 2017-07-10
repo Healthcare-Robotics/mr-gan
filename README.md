@@ -1,8 +1,6 @@
 # Semi-Supervised Haptic Material Recognition using GANs
 
-```
 Z. Erickson, S. Chernova, and C. C. Kemp, "Semi-Supervised Haptic Material Recognition for Robots using Generative Adversarial Networks", submitted to 1st Conference on Robot Learning (CoRL), 2017.
-```
 
 Project webpage: http://healthcare-robotics.com/mr-gan
 
@@ -10,7 +8,7 @@ Project webpage: http://healthcare-robotics.com/mr-gan
 Compact dataset (1 GB) for computing tables 1, 2, and 4: `wget -O data_processed_compact.tar.gz https://goo.gl/WiqSjJ`  
 Full dataset (20 GB) for computing table 3: `wget -O data_processed_full.tar.gz https://goo.gl/FnXfgM`  
 Raw data collected on the PR2: `wget -O data_raw.tar.gz https://goo.gl/DNqPib`  
-More details can be found at: http://healthcare-robotics.com/mr-gan
+Dataset details can be found on the [project webpage](http://healthcare-robotics.com/mr-gan).
 
 ## Running the code
 Our generative adversarial network is implemented in Keras and includes the feature matching technique presented by [Salimans et al.](https://arxiv.org/abs/1606.03498v1)  
