@@ -236,7 +236,7 @@ def mr_gan(X, y, percentlabeled=50, percentunlabeled=None, epochs=100, trainTest
 if __name__ == '__main__':
     modalities = ['Force', 'Temperature', 'Force and Temperature', 'Contact mic', 'Temperature and Contact Mic', 'Force, Temperature, and Contact Mic', 'Force and Contact Mic']
 
-    parser = argparse.ArgumentParser(description='Collecting data from a spinning platter of objects.')
+    parser = argparse.ArgumentParser(description='Semi-supervised learning with GANs for material recognition on haptic data.')
     parser.add_argument('-t', '--tables', nargs='+', help='[Required] Tables to recompute', required=True)
     parser.add_argument('-v', '--verbose', help='Verbose', action='store_true')
     args = parser.parse_args()
