@@ -1,6 +1,6 @@
 # Semi-Supervised Haptic Material Recognition using GANs
 
-Z. Erickson, S. Chernova, and C. C. Kemp, "Semi-Supervised Haptic Material Recognition for Robots using Generative Adversarial Networks", submitted to 1st Conference on Robot Learning (CoRL), 2017.
+Z. Erickson, S. Chernova, and C. C. Kemp, "Semi-Supervised Haptic Material Recognition for Robots using Generative Adversarial Networks", pre-print on [arXiv](https://arxiv.org/abs/1707.02796), 2017.
 
 Project webpage: http://healthcare-robotics.com/mr-gan
 
