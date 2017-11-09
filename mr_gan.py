@@ -163,8 +163,8 @@ def mr_gan(X, y, percentlabeled=50, percentunlabeled=None, epochs=100, trainTest
 
     # Define updates for weights based on loss functions
     adam = Adam(lr=0.0006, beta_1=0.5)
-    disc_param_updates = adam.get_updates(discriminator.trainable_weights, discriminator.constraints, loss_lab + unlabeled_weight*loss_unl)
-    gen_param_updates = adam.get_updates(generator.trainable_weights, generator.constraints, loss_gen)
+    disc_param_updates = adam.get_updates(params=discriminator.trainable_weights, loss=loss_lab + unlabeled_weight*loss_unl)
+    gen_param_updates = adam.get_updates(params=generator.trainable_weights, loss=loss_gen)
     # Define training and test functions
     train_batch_disc = K.function(inputs=[K.learning_phase(), x_lab, labels, x_unl, x_noise], outputs=[loss_lab, loss_unl, train_err], updates=disc_param_updates)
     train_batch_gen = K.function(inputs=[K.learning_phase(), x_unl, x_noise], outputs=loss_gen, updates=gen_param_updates)
@@ -260,7 +260,7 @@ if __name__ == '__main__':
                 print 'Average error:', np.mean(errors), 'Average accuracy:', np.mean(1.0-np.array(errors))
                 sys.stdout.flush()
 
-    if '2' in args.tables:
+    if '3' in args.tables:
         # Test generalization with leave-one-object-out validation
         print '\n', '-'*25, 'Testing generalization with leave-one-object-out validation', '-'*25
         print '-'*100
@@ -282,7 +282,7 @@ if __name__ == '__main__':
                 print 'Average leave-one-object-out error:', np.mean(errors), 'Average accuracy:', np.mean(1.0-np.array(errors))
                 sys.stdout.flush()
 
-    if '3' in args.tables:
+    if '5' in args.tables:
         # Test various lengths of contact time in training data
         print '\n', '-'*25, 'Testing various lengths of contact time in training data', '-'*25
         print '-'*100
@@ -317,7 +317,7 @@ if __name__ == '__main__':
             print 'Average error:', np.mean(errors), 'Average accuracy:', np.mean(1.0-np.array(errors))
             sys.stdout.flush()
 
-    if '4' in args.tables:
+    if '6' in args.tables:
         # Test performance as amount of unlabeled data increases and amount of labeled data remains fixed
         print '\n', '-'*25, 'Testing performance as quantity of unlabeled data increases', '-'*25
         print '-'*100

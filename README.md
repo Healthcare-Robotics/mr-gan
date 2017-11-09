@@ -33,4 +33,10 @@ python collectdataPoke.py -n fabric_khakishorts -s 100 -w 0.1 -l 0.1 -ht 0.06 -v
 python collectdataPoke.py -n plastic_fullwaterbottle -s 100 -l 0.03 -ht 0.08
 ```
 
+### Dependencies
+Python 2.7  
+Keras 2.0.9  
+Librosa 0.5.1  
+Theano 0.9.0  
+Numpy 1.13.3  
 
