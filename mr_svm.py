@@ -6,17 +6,20 @@ from sklearn.utils import shuffle
 from sklearn import preprocessing, decomposition
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedKFold
-
-import keras
-from keras.models import Model
-from keras.layers import Input, Dense
-from keras.layers.noise import GaussianNoise
+from sklearn.svm import SVC, NuSVC, LinearSVC
 
 '''
 Material Recognition GAN
 '''
 
-def dataset(modalities=0, forcetempTime=4, contactmicTime=0.2, leaveObjectOut=False, verbose=False):
+def firstDeriv(x, t):
+    # First derivative of measurements with respect to time
+    dx = np.zeros(np.shape(x), np.float)
+    dx[0:-1] = np.diff(x, axis=0)/np.diff(t, axis=0)
+    dx[-1] = (x[-1] - x[-2])/(t[-1] - t[-2])
+    return dx
+
+def dataset(modalities=0, forcetempTime=4, contactmicTime=0.2, leaveObjectOut=False, verbose=False, deriv=False):
     materials = ['plastic', 'glass', 'fabric', 'metal', 'wood', 'ceramic']
     X = []
     y = []
@@ -34,6 +37,11 @@ def dataset(modalities=0, forcetempTime=4, contactmicTime=0.2, leaveObjectOut=Fa
                     y = objects[objName]['y']
                 for i in xrange(len(objData['temperature'])):
                     y.append(m)
+
+                    if deriv:
+                        objData['force0'][i] = firstDeriv(objData['force0'][i], objData['forceTime'][i])
+                        objData['force1'][i] = firstDeriv(objData['force1'][i], objData['forceTime'][i])
+                        objData['temperature'][i] = firstDeriv(objData['temperature'][i], objData['temperatureTime'][i])
 
                     if modalities > 2:
                         # Mel-scaled power (energy-squared) spectrogram
@@ -66,7 +74,7 @@ def dataset(modalities=0, forcetempTime=4, contactmicTime=0.2, leaveObjectOut=Fa
             print 'X:', np.shape(X), 'y:', np.shape(y)
         return X, y
 
-def mr_nn(X, y, percentlabeled=50, trainTestSets=None, verbose=False):
+def mr_svm(X, y, percentlabeled=50, trainTestSets=None, verbose=False):
     # Non Deterministic output
     np.random.seed(np.random.randint(1e9))
 
@@ -95,27 +103,16 @@ def mr_nn(X, y, percentlabeled=50, trainTestSets=None, verbose=False):
     if verbose:
         print 'x_labeled:', np.shape(x_labeled), 'y_labeled:', np.shape(y_labeled)
 
-    y_labeled = keras.utils.to_categorical(y_labeled, len(materials))
-    y_test = keras.utils.to_categorical(y_test, len(materials))
-
-    inputs = Input(shape=(X_train.shape[1],))
-    x = GaussianNoise(0.3)(inputs)
-    x = Dense(1000, activation='relu')(x)
-    x = GaussianNoise(0.5)(x)
-    x = Dense(500, activation='relu')(x)
-    x = GaussianNoise(0.5)(x)
-    x = Dense(250, activation='relu')(x)
-    x = GaussianNoise(0.5)(x)
-    x = Dense(250, activation='relu')(x)
-    x = GaussianNoise(0.5)(x)
-    x = Dense(250, activation='relu')(x)
-    outputs = Dense(len(materials))(x)
-    model = Model(inputs=inputs, outputs=outputs)
-    model.compile(loss='mse', optimizer='adam', metrics=['accuracy'])
+    svm = SVC(kernel='rbf', C=1.0)
 
     # Train on x_labeled, y_labeled. Test on X_test, y_test
-    model.fit(x_labeled, y_labeled, batch_size=20, epochs=100, validation_split=0.0, verbose=0)
-    testerror = 1.0 - model.evaluate(X_test, y_test, verbose=0)[1]
+    svm.fit(x_labeled, y_labeled)
+    testerror = 1.0 - svm.score(X_test, y_test)
+    test_err = 1.0 - np.mean(svm.predict(X_test) == y_test)
+
+    if verbose:
+        print 'Test error:', testerror, test_err
+        sys.stdout.flush()
     return testerror
 
 if __name__ == '__main__':
@@ -139,7 +136,7 @@ if __name__ == '__main__':
                 # Average over Stratified 6-fold. Training set: 6000, Test set: 1200
                 skf = StratifiedKFold(n_splits=6, shuffle=True)
                 for trainIdx, testIdx in skf.split(X, y):
-                    errors.append(mr_nn(None, None, percentlabeled=percent, trainTestSets=[X[trainIdx], X[testIdx], y[trainIdx], y[testIdx]], verbose=args.verbose))
+                    errors.append(mr_svm(None, None, percentlabeled=percent, trainTestSets=[X[trainIdx], X[testIdx], y[trainIdx], y[testIdx]], verbose=args.verbose))
                     # print 'Test error:', errors[-1], 'Test accuracy:', 1.0-errors[-1]
                     sys.stdout.flush()
                 print 'Average error:', np.mean(errors), 'Average accuracy:', np.mean(1.0-np.array(errors))
@@ -161,7 +158,7 @@ if __name__ == '__main__':
                     ytest = np.array(objData['y'])
                     Xtrain = np.array(list(itertools.chain.from_iterable([data['x'] for name, data in objects.iteritems() if name != objName])))
                     ytrain = np.array(list(itertools.chain.from_iterable([data['y'] for name, data in objects.iteritems() if name != objName])))
-                    errors.append(mr_nn(None, None, percentlabeled=percent, trainTestSets=[Xtrain, Xtest, ytrain, ytest], verbose=args.verbose))
+                    errors.append(mr_svm(None, None, percentlabeled=percent, trainTestSets=[Xtrain, Xtest, ytrain, ytest], verbose=args.verbose))
                     print objName, 'Test error:', errors[-1], 'Test accuracy:', 1.0-errors[-1]
                     sys.stdout.flush()
                 print 'Average leave-one-object-out error:', np.mean(errors), 'Average accuracy:', np.mean(1.0-np.array(errors))

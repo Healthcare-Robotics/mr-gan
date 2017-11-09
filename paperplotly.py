@@ -23,31 +23,59 @@ tempcontact = [52.4, 68.3, 79.2, 84.9, 87.4, 91.2, 92.2]
 forcetempcontact = [62.8, 75.4, 85.6, 89.4, 92.0, 95.4, 96.2]
 
 data = []
-data.append(go.Scatter(x=x, y=force, name='Force', line=dict(dash='lines'), mode='lines'))
-data.append(go.Scatter(x=x, y=temp, name='Temperature', line=dict(dash='lines'), mode='lines'))
-data.append(go.Scatter(x=x, y=contact, name='Contact mic', line=dict(dash='lines'), mode='lines'))
-data.append(go.Scatter(x=x, y=forcetemp, name='Force, Temperature', line=dict(dash='lines'), mode='lines'))
-data.append(go.Scatter(x=x, y=forcecontact, name='Force, Contact mic', line=dict(dash='lines'), mode='lines'))
-data.append(go.Scatter(x=x, y=tempcontact, name='Temperature, Contact mic', line=dict(dash='lines'), mode='lines'))
-data.append(go.Scatter(x=x, y=forcetempcontact, name='Force, Temperature, Contact mic', line=dict(dash='lines'), mode='lines'))
+data.append(go.Scatter(x=x, y=force, name='Force', line=dict(dash='lines', width=4), mode='lines+markers', marker=dict(size=10)))
+data.append(go.Scatter(x=x, y=temp, name='Temperature', line=dict(dash='lines', width=4), mode='lines+markers', marker=dict(size=10)))
+data.append(go.Scatter(x=x, y=contact, name='Contact mic', line=dict(dash='lines', width=4), mode='lines+markers', marker=dict(size=10)))
+data.append(go.Scatter(x=x, y=forcetemp, name='Force, Temperature', line=dict(dash='lines', width=4), mode='lines+markers', marker=dict(size=10)))
+data.append(go.Scatter(x=x, y=forcecontact, name='Force, Contact mic', line=dict(dash='lines', width=4), mode='lines+markers', marker=dict(size=10)))
+data.append(go.Scatter(x=x, y=tempcontact, name='Temperature, Contact mic', line=dict(dash='lines', width=4), mode='lines+markers', marker=dict(size=10)))
+data.append(go.Scatter(x=x, y=forcetempcontact, name='Force, Temperature, Contact mic', line=dict(dash='lines', width=4), mode='lines+markers', marker=dict(size=10)))
 
 layout = dict(title='Accuracy with Varying Labeled Training Data',
               titlefont=dict(size=20),
               xaxis=dict(title='Percent of Training Data Labeled (%)', showgrid=True, titlefont=dict(size=18), tickfont=dict(size=18)),
               yaxis=dict(title='Accuracy (%)', showgrid=True, titlefont=dict(size=18), tickfont=dict(size=18)),
-              width=1280,
-              height=720,
-              legend=dict(font=dict(size=18)),
+              width=1200,
+              height=500,
+              legend=dict(font=dict(size=14)),
               showlegend=True)
 
 plotly.offline.plot({'data': data, 'layout': layout}, filename='plots/table1.html')
 
 # ---------------------------------------
 
+colors = ['rgb(57, 118, 175)', 'rgb(240, 133, 54)', 'rgb(80, 157, 62)', 'rgb(198, 58, 50)', 'rgb(142, 107, 184)']
+
+x = [0.1, 0.2, 0.5, 1, 2, 3, 4]
+force = [70.9, 75.1, 81.8, 86.9, 87.6, 87.6, 87.9]
+temperature = [58.9, 64.4, 70.4, 73.9, 77.5, 80.3, 82.1]
+forcetemp = [84.4, 88.6, 92.4, 94.4, 95.0, 94.8, 95.3]
+xcontact = [0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 1]
+contact = [63.3, 77.0, 83.1, 82.4, 83.8, 84.0, 84.6]
+
+data = []
+data.append(go.Scatter(x=x, y=force, name='Force', line=dict(dash='lines', width=4, color=colors[3]), mode='lines+markers', marker=dict(size=10)))
+data.append(go.Scatter(x=x, y=temperature, name='Temperature', line=dict(dash='lines', width=4, color=colors[2]), mode='lines+markers', marker=dict(size=10)))
+data.append(go.Scatter(x=xcontact, y=contact, name='Contact mic', line=dict(dash='lines', width=4, color=colors[0]), mode='lines+markers', marker=dict(size=10)))
+data.append(go.Scatter(x=x, y=forcetemp, name='Force, Temperature', line=dict(dash='lines', width=4, color=colors[1]), mode='lines+markers', marker=dict(size=10)))
+
+layout = dict(title='Accuracy with Varying Duration of Contact',
+              titlefont=dict(size=20),
+              xaxis=dict(title='Length of Interaction (s)', showgrid=True, titlefont=dict(size=18), tickfont=dict(size=18)),
+              yaxis=dict(title='Accuracy (%)', showgrid=True, titlefont=dict(size=18), tickfont=dict(size=18), range=[50, 100]),
+              width=800,
+              height=400,
+              legend=dict(font=dict(size=14), x=0.65, y=0.05),
+              showlegend=True)
+
+plotly.offline.plot({'data': data, 'layout': layout}, filename='plots/table5.html')
+
+# ---------------------------------------
+
 forcetempTime = 4
 contactmicTime = 0.2
 materials = ['plastic', 'glass', 'fabric', 'metal', 'wood', 'ceramic']
-objects = ['coffee', 'candle', 'pillowcase', 'drinkingmug', 'soapdispenser', 'largemug']
+objects = ['coffee', 'candle', 'khakishorts', 'drinkingmug', 'soapdispenser', 'largemug']
 dataForce = []
 dataTemperature = []
 dataContactmic = []

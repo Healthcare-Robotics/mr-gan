@@ -39,4 +39,5 @@ Keras 2.0.9
 Librosa 0.5.1  
 Theano 0.9.0  
 Numpy 1.13.3  
+Plotly 2.0.11
 
